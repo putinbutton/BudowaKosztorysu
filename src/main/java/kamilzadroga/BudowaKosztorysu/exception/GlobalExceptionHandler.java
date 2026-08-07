@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.springframework.validation.BindingResultUtils.getBindingResult;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,5 +31,9 @@ public class GlobalExceptionHandler {
                 .toList();
         return ResponseEntity.badRequest().body(errors);
 
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleWrongType (IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

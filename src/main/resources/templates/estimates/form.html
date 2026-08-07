@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nowy kosztorys</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navigation}"></div>
+    <h1>Nowy kosztorys</h1>
+
+    <form th:action="@{/estimates}" th:object="${estimate}" method="post">
+
+        <label>Projekt:</label>
+        <select th:field="*{projectId}">
+            <option th:each="project : ${projects}"
+                    th:value="${project.id}"
+                    th:text="${project.name}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('projectId')}" th:errors="*{projectId}" style="color:red"></span>
+        <br/>
+
+        <label>Data utworzenia:</label>
+        <input type="date" th:field="*{creationDate}"/>
+        <span th:if="${#fields.hasErrors('creationDate')}" th:errors="*{creationDate}" style="color:red"></span>
+        <br/>
+
+        <button type="submit">Zapisz</button>
+    </form>
+
+</body>
+</html>

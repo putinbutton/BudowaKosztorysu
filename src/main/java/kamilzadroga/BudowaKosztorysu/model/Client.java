@@ -28,7 +28,7 @@ public class Client {
 
     @NotBlank
     private String phoneNumber;
-
+// czy możemy bez problemu usunąć w modelu @not blank email (email jest zbędny często)
     @NotBlank
     @Email
     private String email;

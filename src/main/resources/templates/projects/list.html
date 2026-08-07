@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista projektów</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navigation}"></div>
+        <h1>Projekty</h1>
+        <a th:href="@{/projects/new}">Dodaj nowy projekt</a>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nazwa/adres</th>
+                    <th>Klient</th>
+                    <th>Data utworzenia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="project : ${projects}">
+                    <td th:text="${project.name}"></td>
+                    <td th:text="${project.clientName}"></td>
+                    <td th:text="${project.creationDate}"></td>
+                </tr>
+            </tbody>
+        </table>
+</body>
+</html>

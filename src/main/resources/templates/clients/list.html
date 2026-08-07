@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista klientów</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div th:replace="~{fragments/nav :: navigation}"></div>
+    <h1>Klienci</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Imię i nazwisko</th>
+                <th>Telefon</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="client : ${clients}">
+                <td th:text="${client.name}"></td>
+                <td th:text="${client.phoneNumber}"></td>
+                <td th:text="${client.email}"></td>
+                <td>
+                    <form th:action="@{/clients/{id}/delete(id=${client.id})}" method="post" style="display:inline">
+                        <button type="submit" onclick="return confirm('Na pewno usunąć?')">Usuń</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/clients/new}">Dodaj nowego klienta</a>
+</body>
+</html>
