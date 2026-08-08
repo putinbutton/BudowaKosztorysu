@@ -3,6 +3,7 @@ package kamilzadroga.BudowaKosztorysu.web;
 import jakarta.validation.Valid;
 import kamilzadroga.BudowaKosztorysu.dto.ClientForm;
 import kamilzadroga.BudowaKosztorysu.dto.ClientRequest;
+import kamilzadroga.BudowaKosztorysu.dto.ClientResponse;
 import kamilzadroga.BudowaKosztorysu.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,28 @@ public class ClientWebController {
     @PostMapping("/{id}/delete")
     public String deleteClient(@PathVariable Long id) {
         clientService.delete(id);
+        return "redirect:/clients";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        ClientResponse client = clientService.getById(id);
+        ClientForm form = new ClientForm();
+        form.setName(client.name());
+        form.setPhoneNumber(client.phoneNumber());
+        form.setEmail(client.email());
+
+        model.addAttribute("client", form);
+        model.addAttribute("clientId", id);
+
+        return "clients/edit-form";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateClient(@PathVariable Long id, @Valid @ModelAttribute("client") ClientForm form) {
+        ClientRequest request = new ClientRequest(form.getName(), form.getPhoneNumber(), form.getEmail());
+        clientService.update(id, request);
+
         return "redirect:/clients";
     }
 }

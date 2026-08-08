@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edytuj pozycję</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: navigation}"></div>
+<h1>Edytuj pozycję</h1>
+
+<form th:action="@{/estimates/{estimateId}/items/{itemId}/edit(estimateId=${estimateId}, itemId=${itemId})}" th:object="${itemForm}" method="post">
+
+    <label>Nazwa:</label>
+    <input type="text" th:field="*{name}"/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
+    <br/>
+
+    <label>Typ:</label>
+    <select th:field="*{itemType}">
+        <option value="MATERIAL">Materiał</option>
+        <option value="LABOR">Robocizna</option>
+    </select>
+    <br/>
+
+    <label>Jednostka:</label>
+    <select th:field="*{unit}">
+        <option value="METER">Metr</option>
+        <option value="SQUARE_METER">Metr kwadratowy</option>
+        <option value="CUBIC_METER">Metr sześcienny</option>
+        <option value="SACK">Worek/Wiadro</option>
+    </select>
+    <br/>
+
+    <label>Ilość:</label>
+    <input type="number" step="0.01" th:field="*{quantity}"/>
+    <br/>
+
+    <label>Cena za jednostkę:</label>
+    <input type="number" step="0.01" th:field="*{pricePerUnit}"/>
+    <br/>
+
+    <label>Cena za godzinę (niewymagane):</label>
+    <input type="number" step="0.01" th:field="*{pricePerHour}"/>
+    <br/>
+
+    <button type="submit">Zapisz</button>
+</form>
+
+<br/>
+<a th:href="@{/estimates/{estimateId}(estimateId=${estimateId})}">Powrót do kosztorysu</a>
+</body>
+</html>

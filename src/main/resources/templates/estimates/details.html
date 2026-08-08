@@ -19,6 +19,8 @@
                 <th>Ilość</th>
                 <th>Cena/Jednostka</th>
                 <th>Wartość</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +31,14 @@
                 <td th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}"></td>
                 <td th:text="${#numbers.formatDecimal(item.pricePerUnit, 1, 2)}"></td>
                 <td th:text="${#numbers.formatDecimal(item.lineTotal, 1, 2)}"></td>
+                <td>
+                    <a th:href="@{/estimates/{estimateId}/items/{itemId}/edit(estimateId=${estimate.id}, itemId=${item.id})}">Edytuj</a>
+                </td>
+                <td>
+                    <form th:action="@{/estimates/{estimateId}/items/{itemId}/delete(estimateId=${estimate.id}, itemId=${item.id})}" method="post" style="display:inline">
+                        <button type="submit" onlick="return confirm('Na pewno usunąć')">Usuń</button>
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -75,6 +85,7 @@
     </form>
 
     <br/>
+    <a th:href="@{/estimates/{id}/pdf(id=${estimate.id})}">Pobierz PDF</a>
     <a th:href="@{/estimates}">Powrót do listy</a>
 </body>
 </html>
