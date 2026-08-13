@@ -85,7 +85,14 @@
     </form>
 
     <br/>
-    <a th:href="@{/estimates/{id}/pdf(id=${estimate.id})}">Pobierz PDF</a>
+    <form th:action="@{/estimates/{id}/pdf(id=${estimate.id})}" method="get">
+        <label>Język:</label>
+        <select name="lang">
+            <option value="pl">Polski</option>
+            <option value="de">Niemiecki</option>
+        </select>
+        <button type="submit">Pobierz PDF</button>
+    </form>
     <a th:href="@{/estimates}">Powrót do listy</a>
 </body>
 </html>

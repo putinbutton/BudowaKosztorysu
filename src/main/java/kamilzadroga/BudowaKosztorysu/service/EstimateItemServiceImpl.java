@@ -2,7 +2,6 @@ package kamilzadroga.BudowaKosztorysu.service;
 
 import kamilzadroga.BudowaKosztorysu.dto.EstimateItemRequest;
 import kamilzadroga.BudowaKosztorysu.dto.EstimateItemResponse;
-import kamilzadroga.BudowaKosztorysu.dto.EstimateResponse;
 import kamilzadroga.BudowaKosztorysu.exception.BudowaKosztorysuNotFoundException;
 import kamilzadroga.BudowaKosztorysu.model.Estimate;
 import kamilzadroga.BudowaKosztorysu.model.EstimateItem;
@@ -13,12 +12,10 @@ import kamilzadroga.BudowaKosztorysu.repository.EstimateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EstimateItemServiceImpl implements EstimateItemService{
+class EstimateItemServiceImpl implements EstimateItemService{
 
     private final EstimateItemRepository itemRepository;
 

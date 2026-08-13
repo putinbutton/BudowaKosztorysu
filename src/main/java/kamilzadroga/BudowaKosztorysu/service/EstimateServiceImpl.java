@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EstimateServiceImpl implements EstimateService{
+class EstimateServiceImpl implements EstimateService{
 
     private final EstimateRepository repository;
 

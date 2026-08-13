@@ -3,37 +3,40 @@ package kamilzadroga.BudowaKosztorysu.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Client {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(unique = true)
     @NotBlank
-    private String name;
+    private String username;
 
     @NotBlank
-    private String phoneNumber;
+    private String password;
 
     @NotBlank
+    private String companyName;
+
+    private String address;
+
+    private String phone;
+
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "client")
-    private List<Project> projectList = new ArrayList<>();
+    private String nip;
 
 }
