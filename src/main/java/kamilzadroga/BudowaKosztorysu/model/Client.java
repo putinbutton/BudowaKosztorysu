@@ -36,4 +36,8 @@ public class Client {
     @OneToMany(mappedBy = "client")
     private List<Project> projectList = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User owner;
+
 }

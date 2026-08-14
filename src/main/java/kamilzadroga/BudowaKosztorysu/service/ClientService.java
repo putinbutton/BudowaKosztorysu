@@ -2,6 +2,7 @@ package kamilzadroga.BudowaKosztorysu.service;
 
 import kamilzadroga.BudowaKosztorysu.dto.ClientRequest;
 import kamilzadroga.BudowaKosztorysu.dto.ClientResponse;
+import kamilzadroga.BudowaKosztorysu.model.Client;
 
 import java.util.List;
 
