@@ -21,13 +21,20 @@ class EstimateItemServiceImpl implements EstimateItemService{
 
     private final EstimateRepository estimateRepository;
 
+    private final CurrentUserService currentUserService;
+
     @Override
     public EstimateItemResponse addItem(Long estimateId, EstimateItemRequest request) {
         Estimate estimate = estimateRepository.findById(estimateId)
                 .orElseThrow(() -> new BudowaKosztorysuNotFoundException(estimateId));
 
+
         EstimateItem estimateItem = new EstimateItem();
         estimateItem.setEstimate(estimate);
+
+        if(!estimateItem.getEstimate().getProject().getClient().getOwner().equals(currentUserService.getCurrentUser())) {
+            throw new BudowaKosztorysuNotFoundException(estimateId);
+        }
 
                estimateItem.setName(request.name());
                estimateItem.setItemType(ItemType.valueOf(request.itemType()));
@@ -49,6 +56,11 @@ class EstimateItemServiceImpl implements EstimateItemService{
         if(!item.getEstimate().getId().equals(estimateId)){
             throw  new BudowaKosztorysuNotFoundException(id);
         }
+
+        if(!item.getEstimate().getProject().getClient().getOwner().equals(currentUserService.getCurrentUser())) {
+            throw new BudowaKosztorysuNotFoundException(estimateId);
+        }
+
         item.setName(request.name());
         item.setItemType(ItemType.valueOf(request.itemType()));
         item.setUnit(Unit.valueOf(request.unit()));
@@ -70,6 +82,9 @@ class EstimateItemServiceImpl implements EstimateItemService{
             throw new BudowaKosztorysuNotFoundException(itemId);
         }
 
+        if(!item.getEstimate().getProject().getClient().getOwner().equals(currentUserService.getCurrentUser())) {
+            throw new BudowaKosztorysuNotFoundException(itemId);
+        }
         itemRepository.deleteById(itemId);
     }
 

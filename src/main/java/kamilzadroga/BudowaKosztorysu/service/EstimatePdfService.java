@@ -5,18 +5,17 @@ import kamilzadroga.BudowaKosztorysu.dto.EstimateResponse;
 import kamilzadroga.BudowaKosztorysu.exception.BudowaKosztorysuNotFoundException;
 import kamilzadroga.BudowaKosztorysu.model.Client;
 import kamilzadroga.BudowaKosztorysu.model.Project;
+import kamilzadroga.BudowaKosztorysu.model.User;
 import kamilzadroga.BudowaKosztorysu.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.openpdf.text.DocumentException;
-import org.openpdf.text.PageSize;
-import org.openpdf.text.Paragraph;
+import org.openpdf.text.*;
+import org.openpdf.text.pdf.PdfPCell;
 import org.openpdf.text.pdf.PdfPTable;
 import org.openpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
-
-import org.openpdf.text.Document;
 import java.io.ByteArrayOutputStream;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +28,10 @@ public class EstimatePdfService {
     private final EstimateService estimateService;
     private final ProjectRepository projectRepository;
     private final TranslationService translationService;
+    private final CurrentUserService currentUserService;
 
     public byte[] generatePdf(Long estimateId, String lang) {
+        User currentUser = currentUserService.getCurrentUser();
         EstimateResponse estimate = estimateService.getById(estimateId);
         Project project = projectRepository.findById(estimate.projectId())
                 .orElseThrow(() -> new BudowaKosztorysuNotFoundException(estimate.projectId()));
@@ -39,7 +40,7 @@ public class EstimatePdfService {
         List<String> labels = new ArrayList<>(List.of(
                 "Kosztorys", "Klient", "Data", "Nazwa", "Typ", "Jednostka",
                 "Ilość", "Cena/jedn.", "Wartość", "Suma", "Materiał", "Robocizna",
-                "metr", "m²", "m³", "worek/wiadro"
+                "metr", "m²", "m³", "worek/wiadro","godzin", "Firma", "Adres", "Telefon"
         ));
 
         List<String> itemNames = estimate.items().stream()
@@ -54,6 +55,9 @@ public class EstimatePdfService {
             t.put(labels.get(i), translated.get(i));
 
         }
+
+
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Document document = new Document(PageSize.A4);
 
@@ -61,12 +65,42 @@ public class EstimatePdfService {
             PdfWriter.getInstance(document, outputStream);
             document.open();
 
-            document.add(new Paragraph(t.get("Kosztorys") + " - "  + estimate.projectName()));
-            document.add(new Paragraph(t.get("Klient") + " : " + client.getName()));
-            document.add(new Paragraph(t.get("Data") + " : " + estimate.creationDate()));
-            // miejsce na dane użytkownika
+            PdfPTable headerTable = new PdfPTable(2);
+            headerTable.setWidthPercentage(100);
+
+            PdfPCell titleCell = new PdfPCell(new Paragraph(t.get("Kosztorys") + " - " + estimate.projectName()));
+            titleCell.setBorder(Rectangle.NO_BORDER);
+            headerTable.addCell(titleCell);
+
+            PdfPCell dateCell = new PdfPCell(new Paragraph(LocalDate.now().toString()));
+            dateCell.setBorder(Rectangle.NO_BORDER);
+            dateCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            headerTable.addCell(dateCell);
+
+            PdfPCell clientCell = new PdfPCell();
+            clientCell.setBorder(Rectangle.NO_BORDER);
+            clientCell.addElement(new Paragraph(" "));
+            clientCell.addElement(new Paragraph(t.get("Klient") + ": " + client.getName()));
+            headerTable.addCell(clientCell);
+
+            PdfPCell companyCell = new PdfPCell();
+            companyCell.setBorder(Rectangle.NO_BORDER);
+            companyCell.addElement(new Paragraph(t.get("Firma") + ": " + currentUser.getCompanyName()));
+            if(currentUser.getAddress() != null && !currentUser.getAddress().isBlank()) {
+                companyCell.addElement(new Paragraph(t.get("Adres") + ": " + currentUser.getAddress()));
+            }
+            if(currentUser.getPhone() != null && !currentUser.getPhone().isBlank()) {
+                companyCell.addElement(new Paragraph(t.get("Telefon") + ": " + currentUser.getPhone()));
+            }
+            if(currentUser.getNip() != null && !currentUser.getNip().isBlank()) {
+                companyCell.addElement(new Paragraph("NIP: " + currentUser.getNip()));
+            }
+            headerTable.addCell(companyCell);
+
+            document.add(headerTable);
             document.add(new Paragraph(" "));
-            document.add(new Paragraph(" "));
+
+
 
             PdfPTable table = new PdfPTable(6);
             table.setWidthPercentage(100);
@@ -90,7 +124,6 @@ public class EstimatePdfService {
 
             document.add(table);
             document.add(new Paragraph(t.get("Suma") + " : " + estimate.totalAmount().setScale(2, RoundingMode.HALF_UP) + " EUR"));
-
             document.close();
         } catch (DocumentException e) {
             throw new RuntimeException("Błąd generowania PDF", e);
@@ -98,7 +131,7 @@ public class EstimatePdfService {
         return outputStream.toByteArray();
     }
 
-    private final String translateItemType(String itemType, Map<String,String> t) {
+    private String translateItemType(String itemType, Map<String,String> t) {
         String polish = switch (itemType) {
             case "MATERIAL" -> "Materiał";
             case "LABOR" -> "Robocizna";
@@ -113,6 +146,7 @@ public class EstimatePdfService {
             case "SQUARE_METER" -> "m²";
             case "CUBIC_METER" -> "m³";
             case "SACK" -> "worek/wiadro";
+            case "HOUR" -> "godzin";
             default -> unit;
         };
         return t.getOrDefault(polish, polish);

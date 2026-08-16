@@ -3,6 +3,7 @@ package kamilzadroga.BudowaKosztorysu.web;
 import jakarta.validation.Valid;
 import kamilzadroga.BudowaKosztorysu.dto.RegisterForm;
 import kamilzadroga.BudowaKosztorysu.dto.RegisterRequest;
+import kamilzadroga.BudowaKosztorysu.exception.UserAlreadyExistsException;
 import kamilzadroga.BudowaKosztorysu.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public class UserWebController {
     }
 
     @PostMapping("/register")
-    public String register (@Valid @ModelAttribute("registerForm") RegisterForm form) {
+    public String register (@Valid @ModelAttribute("registerForm") RegisterForm form, Model model) {
         RegisterRequest request = new RegisterRequest(
                 form.getUsername(),
                 form.getPassword(),
@@ -35,7 +36,12 @@ public class UserWebController {
                 form.getNip()
         );
 
-        userService.register(request);
+        try{
+            userService.register(request);
+        } catch (UserAlreadyExistsException e) {
+            model.addAttribute("error", e.getMessage());
+            return "auth/register";
+        }
         return "redirect:/login";
     }
 

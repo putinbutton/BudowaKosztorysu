@@ -8,6 +8,8 @@
 <body>
     <h1>Rejestracja</h1>
 
+    <p th:if="${error}" style="color:red" th:text="${error}"></p>
+
     <form th:action="@{/register}" th:object="${registerForm}" method="post">
 
         <label>Login:</label>

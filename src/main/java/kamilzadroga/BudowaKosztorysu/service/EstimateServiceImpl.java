@@ -7,6 +7,7 @@ import kamilzadroga.BudowaKosztorysu.exception.BudowaKosztorysuNotFoundException
 import kamilzadroga.BudowaKosztorysu.model.Estimate;
 import kamilzadroga.BudowaKosztorysu.model.EstimateItem;
 import kamilzadroga.BudowaKosztorysu.model.Project;
+import kamilzadroga.BudowaKosztorysu.model.User;
 import kamilzadroga.BudowaKosztorysu.repository.EstimateRepository;
 import kamilzadroga.BudowaKosztorysu.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,22 @@ class EstimateServiceImpl implements EstimateService{
 
     private final ProjectRepository projectRepository;
 
+    private final CurrentUserService currentUserService;
+
     @Override
     public EstimateResponse create(EstimateRequest request) {
         Project project = projectRepository.findById(request.projectId())
                 .orElseThrow(() -> new BudowaKosztorysuNotFoundException(request.projectId()));
+
+        if(!project.getClient().getOwner().equals(currentUserService.getCurrentUser())) {
+            throw new BudowaKosztorysuNotFoundException(request.projectId());
+        }
 
         Estimate estimate = new Estimate();
         estimate.setCreationDate(request.creationDate());
         estimate.setProject(project);
 
         Estimate saved = repository.save(estimate);
-
 
         return mapToResponse(saved);
     }
@@ -44,20 +50,29 @@ class EstimateServiceImpl implements EstimateService{
     public EstimateResponse getById(Long id) {
         Estimate estimate = repository.findById(id)
                 .orElseThrow(() -> new BudowaKosztorysuNotFoundException(id));
+
+        if(!estimate.getProject().getClient().getOwner().equals(currentUserService.getCurrentUser())) {
+            throw new BudowaKosztorysuNotFoundException(id);
+        }
         return mapToResponse(estimate);
 
     }
 
     @Override
     public List<EstimateResponse> getAll() {
-        return repository.findAll().stream()
+        User currentUser = currentUserService.getCurrentUser();
+        return repository.findByProject_Client_Owner(currentUser).stream()
                 .map(this::mapToResponse)
                 .toList();
     }
 
     @Override
     public void delete(Long id) {
-        if(!repository.existsById(id)) {
+
+        Estimate estimate = repository.findById(id)
+                .orElseThrow(() -> new BudowaKosztorysuNotFoundException(id));
+
+        if(!estimate.getProject().getClient().getOwner().equals(currentUserService.getCurrentUser())) {
             throw new BudowaKosztorysuNotFoundException(id);
         }
         repository.deleteById(id);
