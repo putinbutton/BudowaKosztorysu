@@ -9,10 +9,13 @@ import kamilzadroga.BudowaKosztorysu.model.User;
 import kamilzadroga.BudowaKosztorysu.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.openpdf.text.*;
+import org.openpdf.text.Font;
+import org.openpdf.text.Rectangle;
 import org.openpdf.text.pdf.PdfPCell;
 import org.openpdf.text.pdf.PdfPTable;
 import org.openpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -40,7 +43,7 @@ public class EstimatePdfService {
         List<String> labels = new ArrayList<>(List.of(
                 "Kosztorys", "Klient", "Data", "Nazwa", "Typ", "Jednostka",
                 "Ilość", "Cena/jedn.", "Wartość", "Suma", "Materiał", "Robocizna",
-                "metr", "m²", "m³", "worek/wiadro","godzin", "Firma", "Adres", "Telefon"
+                "m", "m²", "m³", "worek/wiadro","godz.", "Firma", "Adres", "Telefon"
         ));
 
         List<String> itemNames = estimate.items().stream()
@@ -103,23 +106,28 @@ public class EstimatePdfService {
 
 
             PdfPTable table = new PdfPTable(6);
+            table.setWidths(new float[]{3f, 2f, 1.5f, 2f, 1.5f, 2f});
             table.setWidthPercentage(100);
             table.setSpacingBefore(15f);
 
-            table.addCell(t.get("Nazwa"));
-            table.addCell(t.get("Typ"));
-            table.addCell(t.get("Jednostka"));
-            table.addCell(t.get("Ilość"));
-            table.addCell(t.get("Cena/jedn."));
-            table.addCell(t.get("Wartość"));
+            Font headerFont = new Font(Font.HELVETICA, 10, Font.BOLD, Color.WHITE);
+            Color headerBackground = new Color(60, 60, 60);
+
+            for (String header : List.of(t.get("Nazwa"), t.get("Typ"), t.get("Ilość"), t.get("Jednostka"), t.get("Cena/jedn."), t.get("Wartość"))) {
+                PdfPCell headerCell = new PdfPCell(new Paragraph(header, headerFont));
+                headerCell.setBackgroundColor(headerBackground);
+                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headerCell.setPadding(6f);
+                table.addCell(headerCell);
+            }
 
             for(EstimateItemResponse item : estimate.items()) {
-                table.addCell(t.getOrDefault(item.name(),item.name()));
-                table.addCell(translateItemType(item.itemType(), t));
-                table.addCell(translateUnit(item.unit(), t));
-                table.addCell(item.quantity().toString());
-                table.addCell(item.pricePerUnit().toString());
-                table.addCell(item.lineTotal().setScale(2, RoundingMode.HALF_UP).toString());
+                table.addCell(createCell(t.getOrDefault(item.name(),item.name()), Element.ALIGN_LEFT));
+                table.addCell(createCell(translateItemType(item.itemType(), t), Element.ALIGN_LEFT));
+                table.addCell(createCell(item.quantity().toString(), Element.ALIGN_RIGHT));
+                table.addCell(createCell(translateUnit(item.unit(), t), Element.ALIGN_LEFT));
+                table.addCell(createCell(item.pricePerUnit().toString(), Element.ALIGN_RIGHT));
+                table.addCell(createCell(item.lineTotal().setScale(2, RoundingMode.HALF_UP).toString(), Element.ALIGN_RIGHT));
             }
 
             document.add(table);
@@ -142,13 +150,19 @@ public class EstimatePdfService {
 
     private final String translateUnit (String unit, Map<String,String> t) {
         String polish = switch (unit) {
-            case "METER" -> "metr";
+            case "METER" -> "m";
             case "SQUARE_METER" -> "m²";
             case "CUBIC_METER" -> "m³";
             case "SACK" -> "worek/wiadro";
-            case "HOUR" -> "godzin";
+            case "HOUR" -> "godz.";
             default -> unit;
         };
         return t.getOrDefault(polish, polish);
+    }
+    private PdfPCell createCell(String text, int alignment) {
+        PdfPCell cell = new PdfPCell(new Paragraph(text));
+        cell.setHorizontalAlignment(alignment);
+        cell.setPadding(6f);
+        return cell;
     }
 }
