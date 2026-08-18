@@ -8,6 +8,7 @@ import kamilzadroga.BudowaKosztorysu.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -33,7 +34,11 @@ public class ProjectWebController {
     }
 
     @PostMapping
-    public String createProject(@Valid @ModelAttribute("project") ProjectForm form) {
+    public String createProject(@Valid @ModelAttribute("project") ProjectForm form, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("clients", clientService.getAll());
+            return "projects/form";
+        }
         ProjectRequest request = new ProjectRequest(form.getClientId(), form.getName(), form.getCreationDate());
         projectService.create(request);
         return "redirect:/projects";

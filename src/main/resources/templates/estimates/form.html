@@ -9,6 +9,8 @@
     <div th:replace="~{fragments/nav :: navigation}"></div>
     <h1>Nowy kosztorys</h1>
 
+    <p th:if="${error}" style="color:red" th:text="${error}"></p>
+
     <form th:action="@{/estimates}" th:object="${estimate}" method="post">
 
         <label>Projekt:</label>

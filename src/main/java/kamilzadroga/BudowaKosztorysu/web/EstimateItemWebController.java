@@ -8,6 +8,7 @@ import kamilzadroga.BudowaKosztorysu.service.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -20,7 +21,11 @@ public class EstimateItemWebController {
     private final EstimateService estimateService;
 
     @PostMapping
-    public String addItem(@PathVariable Long estimateId, @Valid @ModelAttribute("itemForm")EstimateItemForm form) {
+    public String addItem(@PathVariable Long estimateId, @Valid @ModelAttribute("itemForm")EstimateItemForm form, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("estimate", estimateService.getById(estimateId));
+            return "estimates/details";
+        }
         EstimateItemRequest request = new EstimateItemRequest(
                 form.getName(),
                 form.getItemType(),
@@ -64,7 +69,12 @@ public class EstimateItemWebController {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String updateEstimateItem(@PathVariable Long estimateId,@PathVariable Long itemId, @Valid @ModelAttribute("estimateItem") EstimateItemForm form) {
+    public String updateEstimateItem(@PathVariable Long estimateId,@PathVariable Long itemId, @Valid @ModelAttribute("itemForm") EstimateItemForm form, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("estimateId", estimateId);
+            model.addAttribute("itemId", itemId);
+            return "estimates/item-edit-form";
+        }
         EstimateItemRequest request = new EstimateItemRequest(
                 form.getName(),
                 form.getItemType(),

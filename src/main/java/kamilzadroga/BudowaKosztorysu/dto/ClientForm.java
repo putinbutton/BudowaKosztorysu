@@ -11,13 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ClientForm {
 
-    @NotBlank
+    @NotBlank (message = "Pole nie może być puste")
     private String name;
 
-    @NotBlank
+    @NotBlank (message = "Pole nie może być puste")
     private String phoneNumber;
 
-    @NotBlank
-    @Email
+    @Email (message = "Nieprawidłowy format adresu email")
     private String email;
 }

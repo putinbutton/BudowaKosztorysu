@@ -8,13 +8,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class RegisterForm {
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String companyName;
 
     private String address;

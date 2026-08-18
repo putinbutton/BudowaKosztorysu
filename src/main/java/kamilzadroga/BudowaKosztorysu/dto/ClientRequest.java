@@ -4,10 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record ClientRequest(
-        @NotBlank String name,
+        @NotBlank (message = "Pole nie może być puste")
+         String name,
 
-        @NotBlank String phoneNumber,
+        @NotBlank (message = "Pole nie może być puste")
+         String phoneNumber,
 
-        @NotBlank @Email String email
+        @Email (message = "Nieprawidłowy format adresu email")
+         String email
 ) {
 }

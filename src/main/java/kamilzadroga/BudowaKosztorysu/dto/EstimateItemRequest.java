@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record EstimateItemRequest(
-        @NotBlank String name,
-        @NotBlank String itemType,
-        @NotBlank String unit,
+        @NotBlank(message = "Pole nie może być puste") String name,
+        @NotBlank(message = "Pole nie może być puste") String itemType,
+        @NotBlank(message = "Pole nie może być puste") String unit,
         @NotNull BigDecimal quantity,
         @NotNull BigDecimal pricePerUnit,
         BigDecimal pricePerHour

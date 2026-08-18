@@ -29,7 +29,6 @@ public class Client {
     @NotBlank
     private String phoneNumber;
 
-    @NotBlank
     @Email
     private String email;
 

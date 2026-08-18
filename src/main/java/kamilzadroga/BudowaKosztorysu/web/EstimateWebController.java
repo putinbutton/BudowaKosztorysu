@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kamilzadroga.BudowaKosztorysu.dto.EstimateForm;
 import kamilzadroga.BudowaKosztorysu.dto.EstimateItemForm;
 import kamilzadroga.BudowaKosztorysu.dto.EstimateRequest;
+import kamilzadroga.BudowaKosztorysu.exception.EstimateAlreadyExistsException;
 import kamilzadroga.BudowaKosztorysu.service.EstimateItemService;
 import kamilzadroga.BudowaKosztorysu.service.EstimatePdfService;
 import kamilzadroga.BudowaKosztorysu.service.EstimateService;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -44,9 +46,20 @@ public class EstimateWebController {
     }
 
     @PostMapping
-    public String createEstimate(@Valid @ModelAttribute("estimate") EstimateForm form) {
+    public String createEstimate(@Valid @ModelAttribute("estimate") EstimateForm form, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("projects", projectService.getAll());
+            return "estimates/form";
+        }
         EstimateRequest request = new EstimateRequest(form.getProjectId(), form.getCreationDate());
-        estimateService.create(request);
+
+        try{
+            estimateService.create(request);
+        } catch (EstimateAlreadyExistsException e) {
+            model.addAttribute("projects", projectService.getAll());
+            model.addAttribute("error", e.getMessage());
+            return "estimates/form";
+        }
         return "redirect:/estimates";
     }
 

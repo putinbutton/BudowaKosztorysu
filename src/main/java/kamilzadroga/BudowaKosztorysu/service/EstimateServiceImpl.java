@@ -4,6 +4,7 @@ import kamilzadroga.BudowaKosztorysu.dto.EstimateItemResponse;
 import kamilzadroga.BudowaKosztorysu.dto.EstimateRequest;
 import kamilzadroga.BudowaKosztorysu.dto.EstimateResponse;
 import kamilzadroga.BudowaKosztorysu.exception.BudowaKosztorysuNotFoundException;
+import kamilzadroga.BudowaKosztorysu.exception.EstimateAlreadyExistsException;
 import kamilzadroga.BudowaKosztorysu.model.Estimate;
 import kamilzadroga.BudowaKosztorysu.model.EstimateItem;
 import kamilzadroga.BudowaKosztorysu.model.Project;
@@ -30,11 +31,15 @@ class EstimateServiceImpl implements EstimateService{
 
     @Override
     public EstimateResponse create(EstimateRequest request) {
+
         Project project = projectRepository.findById(request.projectId())
                 .orElseThrow(() -> new BudowaKosztorysuNotFoundException(request.projectId()));
 
         if(!project.getClient().getOwner().equals(currentUserService.getCurrentUser())) {
             throw new BudowaKosztorysuNotFoundException(request.projectId());
+        }
+        if(project.getEstimate() != null) {
+            throw new EstimateAlreadyExistsException(project.getName());
         }
 
         Estimate estimate = new Estimate();

@@ -13,13 +13,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class EstimateItemForm {
 
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String itemType;
 
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String unit;
 
     @NotNull

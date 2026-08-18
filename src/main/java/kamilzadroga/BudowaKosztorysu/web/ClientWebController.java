@@ -8,6 +8,7 @@ import kamilzadroga.BudowaKosztorysu.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -29,7 +30,10 @@ public class ClientWebController {
     }
 
     @PostMapping
-    public String createClient(@Valid @ModelAttribute("client") ClientForm form) {
+    public String createClient(@Valid @ModelAttribute("client") ClientForm form, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "clients/form";
+        }
         ClientRequest request = new ClientRequest(form.getName(), form.getPhoneNumber(), form.getEmail());
         clientService.create(request);
         return "redirect:/clients";
@@ -56,7 +60,11 @@ public class ClientWebController {
     }
 
     @PostMapping("/{id}/edit")
-    public String updateClient(@PathVariable Long id, @Valid @ModelAttribute("client") ClientForm form) {
+    public String updateClient(@PathVariable Long id, @Valid @ModelAttribute("client") ClientForm form, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            model.addAttribute("clientId", id);
+            return "clients/edit-form";
+        }
         ClientRequest request = new ClientRequest(form.getName(), form.getPhoneNumber(), form.getEmail());
         clientService.update(id, request);
 

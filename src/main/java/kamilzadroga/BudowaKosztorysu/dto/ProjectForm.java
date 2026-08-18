@@ -16,7 +16,7 @@ public class ProjectForm {
     @NotNull
     private Long clientId;
 
-    @NotBlank
+    @NotBlank(message = "Pole nie może być puste")
     private String name;
 
     @NotNull
