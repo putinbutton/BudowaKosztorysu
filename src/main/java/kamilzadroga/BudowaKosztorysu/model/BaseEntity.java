@@ -25,12 +25,13 @@ public abstract class BaseEntity {
 
     @Override
     public boolean equals(Object that) {
-        return this == that
-                || (that instanceof BaseEntity && Objects.equals(uuid,((BaseEntity) that).uuid));
+        if(this == that) return true;
+        if(!(that instanceof BaseEntity other)) return false;
+        return Objects.equals(getUuid(), other.getUuid());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        return Objects.hash(getUuid());
     }
 }
