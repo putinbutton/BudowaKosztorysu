@@ -18,7 +18,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**", "/register", "/login", "/css/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .formLogin(form ->form
                         .loginPage("/login")

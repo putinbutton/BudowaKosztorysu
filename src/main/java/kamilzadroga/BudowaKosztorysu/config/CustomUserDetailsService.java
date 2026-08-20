@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -18,10 +20,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         kamilzadroga.BudowaKosztorysu.model.User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika: " + username));
 
+        boolean isLocked = user.getLockedUntil() != null && user.getLockedUntil().isAfter(LocalDateTime.now());
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
                 .roles("USER")
+                .accountLocked(isLocked)
                 .build();
     }
 }
