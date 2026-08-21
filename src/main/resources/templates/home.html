@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimly — Wyceny remontów i prac budowlanych</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="landing">
+
+<header class="landing-header">
+    <div class="landing-header-inner">
+        <div class="brand">
+            <svg class="brand-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 24 L22 8 L38 24" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="10" y="22" width="20" height="18" fill="none" stroke="var(--gold)" stroke-width="2.5"/>
+                <rect x="15" y="27" width="4" height="4" fill="var(--gold)"/>
+                <rect x="21" y="27" width="4" height="4" fill="var(--gold)"/>
+                <rect x="15" y="33" width="4" height="4" fill="var(--gold)"/>
+                <rect x="21" y="33" width="4" height="4" fill="var(--gold)"/>
+                <path d="M28 16 L36 16 L40 20 L40 40 L28 40 Z" fill="var(--navy-light)" stroke="white" stroke-width="1.5"/>
+                <line x1="31" y1="24" x2="37" y2="24" stroke="white" stroke-width="1.2"/>
+                <line x1="31" y1="28" x2="37" y2="28" stroke="white" stroke-width="1.2"/>
+                <line x1="31" y1="32" x2="37" y2="32" stroke="white" stroke-width="1.2"/>
+            </svg>
+            <span class="brand-name">Estimly</span>
+        </div>
+        <nav class="landing-nav">
+            <a th:href="@{/login}" class="btn btn-ghost">Zaloguj się</a>
+            <a th:href="@{/register}" class="btn btn-primary">Załóż darmowe konto</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-inner">
+        <h1 class="hero-title">Estimly</h1>
+        <p class="hero-subtitle">Wyceny remontów i prac budowlanych</p>
+        <p class="hero-description">
+            Twórz profesjonalne kosztorysy budowlane w kilka minut, zarządzaj klientami
+            i projektami w jednym miejscu, generuj gotowe do wysłania dokumenty PDF —
+            nawet w kilkudziesięciu językach.
+        </p>
+        <div class="hero-actions">
+            <a th:href="@{/register}" class="btn btn-primary btn-large">Zacznij za darmo</a>
+            <a th:href="@{/login}" class="btn btn-ghost btn-large">Mam już konto</a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="features-inner">
+        <div class="feature-card">
+            <div class="feature-icon">⏱️</div>
+            <h3>Szybka wycena</h3>
+            <p>Dodawaj klientów, projekty i kosztorysy w prosty, przejrzysty sposób.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🧮</div>
+            <h3>Kosztorys w kilka minut</h3>
+            <p>Automatyczne liczenie wartości pozycji i sumy całego kosztorysu.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <h3>Profesjonalne wyceny</h3>
+            <p>Gotowy, elegancki dokument PDF do wysłania klientowi.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3>Zadowoleni klienci</h3>
+            <p>Przejrzyste kosztorysy budują zaufanie i profesjonalny wizerunek.</p>
+        </div>
+    </div>
+</section>
+
+<section class="translation-banner">
+    <div class="translation-inner">
+        <div class="translation-text">
+            <h2>Tłumaczenie wycen w każdym języku</h2>
+            <p>Dotrzyj do klientów na całym świecie. Przetłumacz kosztorys jednym kliknięciem — obecnie dostępne polski i niemiecki, kolejne języki w przygotowaniu.</p>
+        </div>
+    </div>
+</section>
+
+<footer class="landing-footer">
+    <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}"></span> Estimly — Kamil Zadroga</p>
+</footer>
+
+</body>
+</html>

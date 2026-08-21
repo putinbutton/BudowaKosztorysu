@@ -1,56 +1,350 @@
+:root {
+    --navy-dark: #0d1b3f;
+    --navy: #142a5c;
+    --navy-light: #1e3a75;
+    --gold: #d9a441;
+    --gold-light: #e8c47a;
+    --text-light: #f4f6fb;
+    --text-muted: #b9c2d9;
+    --border-light: #dfe3ec;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    front-family: Arial, sans-serif;
-    margin:40px;
-    color #222;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    color: #222;
+    background-color: #f7f8fb;
+}
+
+/* ---------- App (logged-in) layout ---------- */
+
+body:not(.landing) {
+    padding: 0 20px 40px;
 }
 
 nav {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #333;
+    background-color: var(--navy-dark);
+    margin: 0 -20px 24px;
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 16px;
 }
 
 nav a {
-    margin-right: 15px;
+    color: var(--text-light);
     text-decoration: none;
-    color: #2c5f8a;
-    font-weight: bold;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: var(--gold-light);
+}
+
+nav form {
+    margin-left: auto;
+}
+
+nav button {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+nav button:hover {
+    background-color: var(--gold);
+    color: var(--navy-dark);
+}
+
+h1 {
+    color: var(--navy-dark);
 }
 
 table {
     border-collapse: collapse;
     width: 100%;
     margin: 20px 0;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-
 th, td {
-    border: 1px solid #ccc;
-    padding: 8px 12px;
+    border: 1px solid var(--border-light);
+    padding: 10px 14px;
     text-align: left;
 }
 
 th {
-    background-color: #f0f0f0;
+    background-color: var(--navy-dark);
+    color: var(--text-light);
 }
 
 form label {
     display: block;
-    margin-top: 10px;
-    font-weight: bold;
+    margin-top: 12px;
+    font-weight: 600;
+    color: var(--navy-dark);
 }
 
 form input, form select {
-    padding: 6px;
+    padding: 8px 10px;
     margin-top: 4px;
-    width: 250px;
+    width: 100%;
+    max-width: 320px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
 }
 
-button {
-    margin-top: 15px;
-    padding: 8px 16px;
-    background-color: #2c5f8a;
+button, .btn {
+    margin-top: 16px;
+    padding: 10px 20px;
+    background-color: var(--navy-dark);
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button:hover, .btn:hover {
+    background-color: var(--navy-light);
+}
+
+/* ---------- Landing page ---------- */
+
+.landing {
+    padding: 0;
+    background-color: var(--navy-dark);
+    color: var(--text-light);
+}
+
+.landing-header {
+    padding: 20px 0;
+}
+
+.landing-header-inner, .translation-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.brand-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+}
+
+.landing-nav {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+}
+
+.btn-ghost:hover {
+    background-color: rgba(217, 164, 65, 0.15);
+}
+
+.btn-primary {
+    background-color: var(--gold);
+    color: var(--navy-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--gold-light);
+}
+
+.btn-large {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+.hero {
+    text-align: center;
+    padding: 70px 24px 90px;
+}
+
+.hero-title {
+    font-size: 64px;
+    font-weight: 800;
+    margin: 0;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    color: var(--gold-light);
+    font-weight: 600;
+    margin: 8px 0 24px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.hero-description {
+    max-width: 600px;
+    margin: 0 auto 36px;
+    color: var(--text-muted);
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.features {
+    background-color: var(--navy);
+    padding: 60px 24px;
+}
+
+.features-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.feature-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.feature-card h3 {
+    color: white;
+    margin: 0 0 8px;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.translation-banner {
+    background-color: var(--navy-dark);
+    border-top: 1px solid var(--navy-light);
+    border-bottom: 1px solid var(--navy-light);
+    padding: 50px 24px;
+}
+
+.translation-text h2 {
+    color: var(--gold-light);
+    margin: 0 0 12px;
+}
+
+.translation-text p {
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.landing-footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+    .features-inner {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 42px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .features-inner {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav form {
+        margin-left: 0;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        margin-bottom: 12px;
+        border: 1px solid var(--border-light);
+    }
+
+    td {
+        border: none;
+        border-bottom: 1px solid var(--border-light);
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td::before {
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--navy-dark);
+    }
 }

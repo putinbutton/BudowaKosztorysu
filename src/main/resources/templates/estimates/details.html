@@ -6,94 +6,110 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/nav :: navigation}"></div>
-    <h1>Kosztorys - <span th:text="${estimate.projectName}"></span></h1>
-    <p>Data: <span th:text="${estimate.creationDate}"></span></p>
+<div th:replace="~{fragments/nav :: navigation}"></div>
+<h1>Kosztorys - <span th:text="${estimate.projectName}"></span></h1>
+<p>Data: <span th:text="${estimate.creationDate}"></span></p>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nazwa</th>
-                <th>Typ</th>
-                <th>Jednostka</th>
-                <th>Ilość</th>
-                <th>Cena/Jednostka</th>
-                <th>Wartość</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="item : ${estimate.items}">
-                <td th:text="${item.name}"></td>
-                <td th:text="${item.itemType}"></td>
-                <td th:text="${item.unit}"></td>
-                <td th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}"></td>
-                <td th:text="${#numbers.formatDecimal(item.pricePerUnit, 1, 2)}"></td>
-                <td th:text="${#numbers.formatDecimal(item.lineTotal, 1, 2)}"></td>
-                <td>
-                    <a th:href="@{/estimates/{estimateId}/items/{itemId}/edit(estimateId=${estimate.id}, itemId=${item.id})}">Edytuj</a>
-                </td>
-                <td>
-                    <form th:action="@{/estimates/{estimateId}/items/{itemId}/delete(estimateId=${estimate.id}, itemId=${item.id})}" method="post" style="display:inline">
-                        <button type="submit" onlick="return confirm('Na pewno usunąć')">Usuń</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nazwa</th>
+        <th>Typ</th>
+        <th>Jednostka</th>
+        <th>Ilość</th>
+        <th>Cena/Jednostka</th>
+        <th>Wartość</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${estimate.items}">
+        <td th:text="${item.name}"></td>
+        <td>
+    <span th:switch="${item.itemType}">
+        <span th:case="'MATERIAL'">Materiał</span>
+        <span th:case="'LABOR'">Robocizna</span>
+        <span th:case="*" th:text="${item.itemType}"></span>
+    </span>
+        </td>
+        <td>
+    <span th:switch="${item.unit}">
+        <span th:case="'METER'">metr</span>
+        <span th:case="'SQUARE_METER'">m²</span>
+        <span th:case="'CUBIC_METER'">m³</span>
+        <span th:case="'SACK'">worek/wiadro</span>
+        <span th:case="'HOUR'">godz.</span>
+        <span th:case="*" th:text="${item.unit}"></span>
+    </span>
+        </td>
+        <td th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}"></td>
+        <td th:text="${#numbers.formatDecimal(item.pricePerUnit, 1, 2)}"></td>
+        <td th:text="${#numbers.formatDecimal(item.lineTotal, 1, 2)}"></td>
+        <td>
+            <a th:href="@{/estimates/{estimateId}/items/{itemId}/edit(estimateId=${estimate.id}, itemId=${item.id})}">Edytuj</a>
+        </td>
+        <td>
+            <form th:action="@{/estimates/{estimateId}/items/{itemId}/delete(estimateId=${estimate.id}, itemId=${item.id})}"
+                  method="post" style="display:inline">
+                <button type="submit" onlick="return confirm('Na pewno usunąć')">Usuń</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-    <h2>Suma: <span th:text="${#numbers.formatDecimal(estimate.totalAmount, 1, 2)}"></span></h2>
+<h2>Suma: <span th:text="${#numbers.formatDecimal(estimate.totalAmount, 1, 2)}"></span></h2>
 
-    <h3>Dodaj pozycję</h3>
-    <form th:action="@{/estimates/{id}/items(id=${estimate.id})}" th:object="${itemForm}" method="post">
+<h3>Dodaj pozycję</h3>
+<form th:action="@{/estimates/{id}/items(id=${estimate.id})}" th:object="${itemForm}" method="post">
 
-        <label>Nazwa:</label>
-        <input type="text" th:field="*{name}"/>
-        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
-        <br/>
-
-        <label>Typ:</label>
-        <select th:field="*{itemType}">
-            <option value="MATERIAL">Materiał</option>
-            <option value="LABOR">Robocizna</option>
-        </select>
-        <br/>
-
-        <label>Jednostka:</label>
-        <select th:field="*{unit}">
-            <option value="METER">Metr</option>
-            <option value="SQUARE_METER">Metr kwadratowy</option>
-            <option value="CUBIC_METER">Metr szcześcienny</option>
-            <option value="SACK">Worek/Wiadro</option>
-            <option value="HOUR">Godzina</option>
-        </select>
-        <br/>
-
-        <label>Ilość:</label>
-        <input type="number" step="0.01" th:field="*{quantity}"/>
-        <br/>
-
-        <label>Cena za jednostkę:</label>
-        <input type="number" step="0.01" th:field="*{pricePerUnit}"/>
-        <br/>
-
-        <label>Cena za godzinę (niewymagane):</label>
-        <input type="number" step="0.01" th:field="*{pricePerHour}"/>
-        <br/>
-
-        <button type="submit">Dodaj pozycję</button>
-    </form>
-
+    <label>Nazwa:</label>
+    <input type="text" th:field="*{name}"/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
     <br/>
-    <form th:action="@{/estimates/{id}/pdf(id=${estimate.id})}" method="get">
-        <label>Język:</label>
-        <select name="lang">
-            <option value="pl">Polski</option>
-            <option value="de">Niemiecki</option>
-        </select>
-        <button type="submit">Pobierz PDF</button>
-    </form>
-    <a th:href="@{/estimates}">Powrót do listy</a>
+
+    <label>Typ:</label>
+    <select th:field="*{itemType}">
+        <option value="MATERIAL">Materiał</option>
+        <option value="LABOR">Robocizna</option>
+    </select>
+    <br/>
+
+    <label>Jednostka:</label>
+    <select th:field="*{unit}">
+        <option value="METER">Metr</option>
+        <option value="SQUARE_METER">Metr kwadratowy</option>
+        <option value="CUBIC_METER">Metr szcześcienny</option>
+        <option value="SACK">Worek/Wiadro</option>
+        <option value="HOUR">Godzina</option>
+    </select>
+    <br/>
+
+    <label>Ilość:</label>
+    <input type="number" step="0.01" th:field="*{quantity}"/>
+    <br/>
+
+    <label>Cena za jednostkę:</label>
+    <input type="number" step="0.01" th:field="*{pricePerUnit}"/>
+    <br/>
+
+    <label>Cena za godzinę (niewymagane):</label>
+    <input type="number" step="0.01" th:field="*{pricePerHour}"/>
+    <br/>
+
+    <button type="submit">Dodaj pozycję</button>
+</form>
+
+<br/>
+<form th:action="@{/estimates/{id}/pdf(id=${estimate.id})}" method="get">
+    <label>Język:</label>
+    <select name="lang">
+        <option value="pl">Polski</option>
+        <option value="de">Niemiecki</option>
+    </select>
+    <button type="submit">Pobierz PDF</button>
+</form>
+<a th:href="@{/estimates}">Powrót do listy</a>
 </body>
 </html>
