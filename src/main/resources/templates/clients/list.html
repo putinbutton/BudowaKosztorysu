@@ -28,9 +28,7 @@
                     <a th:href="@{/clients/{id}/edit(id=${client.id})}">Edytuj</a>
                 </td>
                 <td>
-                    <form th:action="@{/clients/{id}/delete(id=${client.id})}" method="post" style="display:inline">
-                        <button type="submit" onclick="return confirm('Na pewno usunąć?')">Usuń</button>
-                    </form>
+                    <a th:href="@{/clients/{id}/delete-confirm(id=${client.id})}">Usuń</a>
                 </td>
             </tr>
         </tbody>

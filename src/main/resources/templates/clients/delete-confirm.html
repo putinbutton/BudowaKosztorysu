@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Potwierdź usunięcie klienta</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: navigation}"></div>
+
+<h1>Potwierdź usunięcie klienta</h1>
+
+<p>Czy na pewno chcesz usunąć klienta <strong th:text="${client.name}"></strong>?</p>
+
+<div th:if="${projects.isEmpty()}">
+    <p>Ten klient nie ma żadnych projektów.</p>
+</div>
+
+<div th:unless="${projects.isEmpty()}">
+    <p style="color:red">
+        <strong>Uwaga:</strong> wraz z klientem zostaną trwale usunięte następujące projekty i wszystkie powiązane z nimi kosztorysy:
+    </p>
+    <ul>
+        <li th:each="project : ${projects}" th:text="${project.name}"></li>
+    </ul>
+</div>
+
+<form th:action="@{/clients/{id}/delete(id=${client.id})}" method="post">
+    <button type="submit" style="background-color:#b02a2a">Usuń klienta i wszystkie powiązane dane</button>
+    <a th:href="@{/clients}">Anuluj</a>
+</form>
+
+</body>
+</html>

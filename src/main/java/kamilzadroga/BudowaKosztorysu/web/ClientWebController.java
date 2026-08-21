@@ -4,18 +4,24 @@ import jakarta.validation.Valid;
 import kamilzadroga.BudowaKosztorysu.dto.ClientForm;
 import kamilzadroga.BudowaKosztorysu.dto.ClientRequest;
 import kamilzadroga.BudowaKosztorysu.dto.ClientResponse;
+import kamilzadroga.BudowaKosztorysu.dto.ProjectResponse;
 import kamilzadroga.BudowaKosztorysu.service.ClientService;
+import kamilzadroga.BudowaKosztorysu.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/clients")
 public class ClientWebController {
     private final ClientService clientService;
+
+    private final ProjectService projectService;
 
     @GetMapping
     public String listClients(Model model) {
@@ -69,5 +75,17 @@ public class ClientWebController {
         clientService.update(id, request);
 
         return "redirect:/clients";
+    }
+
+    @GetMapping("/{id}/delete-confirm")
+    public String showDeleteConfirmation (@PathVariable Long id, Model model) {
+        ClientResponse client = clientService.getById(id);
+        List<ProjectResponse> relatedProjects = projectService.getAll().stream()
+                .filter(project -> project.clientId().equals(id))
+                .toList();
+
+        model.addAttribute("client", client);
+        model.addAttribute("projects", relatedProjects);
+        return "clients/delete-confirm";
     }
 }

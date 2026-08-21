@@ -19,7 +19,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf(Customizer.withDefaults())
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())
+                        .httpStrictTransportSecurity(hsts ->hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000)
+                        )
+                )
                 .formLogin(form ->form
                         .loginPage("/login")
                         .defaultSuccessUrl("/clients", true)
