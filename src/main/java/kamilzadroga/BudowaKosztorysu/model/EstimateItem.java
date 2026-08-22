@@ -6,10 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import java.math.BigDecimal;
 
 @Entity
+@Audited
 @Getter
 @Setter
 @NoArgsConstructor

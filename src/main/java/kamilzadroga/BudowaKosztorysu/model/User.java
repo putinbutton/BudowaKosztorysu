@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 
 
 @Entity
+@Audited
 @Getter
 @Setter
 @Table(name ="users")
