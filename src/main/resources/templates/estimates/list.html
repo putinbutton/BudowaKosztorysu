@@ -6,28 +6,27 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/nav :: navigation}"></div>
-    <h1>Kosztorys</h1>
+<div th:replace="~{fragments/nav :: navigation}"></div>
+<h1>Kosztorysy</h1>
+<a th:href="@{/estimates/new}">Nowy kosztorys</a>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Projekt</th>
-                <th>Data</th>
-                <th>Suma</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="estimate : ${estimates}">
-                <td th:text="${estimate.projectName}"></td>
-                <td th:text="${estimate.creationDate}"></td>
-                <td th:text="${estimate.totalAmount}"></td>
-                <td><a th:href="@{/estimates/{id}(id=${estimate.id})}">Szczegóły</a></td>
-            </tr>
-        </tbody>
-    </table>
-    <h1>Kosztorysy</h1>
-    <a th:href="@{/estimates/new}">Nowy kosztorys</a>
-
+<table border="1">
+    <thead>
+    <tr>
+        <th>Projekt</th>
+        <th>Data</th>
+        <th>Suma</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="estimate : ${estimates}">
+        <td data-label="Projekt" th:text="${estimate.projectName}"></td>
+        <td data-label="Data" th:text="${estimate.creationDate}"></td>
+        <td data-label="Suma" th:text="${#numbers.formatDecimal(estimate.totalAmount, 1, 2)}"></td>
+        <td data-label="Akcje"><a th:href="@{/estimates/{id}(id=${estimate.id})}">Szczegóły</a></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

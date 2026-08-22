@@ -21,14 +21,16 @@
         </thead>
         <tbody>
             <tr th:each="client : ${clients}">
-                <td th:text="${client.name}"></td>
-                <td th:text="${client.phoneNumber}"></td>
-                <td th:text="${client.email}"></td>
-                <td>
+                <td data-label="Imię i nazwisko" th:text="${client.name}"></td>
+                <td data-label="Telefon" th:text="${client.phoneNumber}"></td>
+                <td data-label="Email" th:text="${client.email}"></td>
+                <td data-label="Akcje">
                     <a th:href="@{/clients/{id}/edit(id=${client.id})}">Edytuj</a>
                 </td>
-                <td>
-                    <a th:href="@{/clients/{id}/delete-confirm(id=${client.id})}">Usuń</a>
+                <td data-label="Akcje">
+                    <form th:action="@{/clients/{id}/delete-confirm(id=${client.id})}" method="get" style="display:inline">
+                        <button type="submit">Usuń</button>
+                    </form>
                 </td>
             </tr>
         </tbody>

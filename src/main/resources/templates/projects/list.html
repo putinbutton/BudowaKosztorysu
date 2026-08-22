@@ -19,11 +19,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="project : ${projects}">
-                    <td th:text="${project.name}"></td>
-                    <td th:text="${project.clientName}"></td>
-                    <td th:text="${project.creationDate}"></td>
-                </tr>
+            <tr th:each="project : ${projects}">
+                <td data-label="Nazwa/adres" th:text="${project.name}"></td>
+                <td data-label="Klient" th:text="${project.clientName}"></td>
+                <td data-label="Data utworzenia" th:text="${project.creationDate}"></td>
+            </tr>
             </tbody>
         </table>
 </body>

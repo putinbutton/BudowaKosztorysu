@@ -15,9 +15,9 @@
     <tr>
         <th>Nazwa</th>
         <th>Typ</th>
+        <th>Cena/jedn.</th>
         <th>Jednostka</th>
         <th>Ilość</th>
-        <th>Cena/Jednostka</th>
         <th>Wartość</th>
         <th></th>
         <th></th>
@@ -25,34 +25,33 @@
     </thead>
     <tbody>
     <tr th:each="item : ${estimate.items}">
-        <td th:text="${item.name}"></td>
-        <td>
-    <span th:switch="${item.itemType}">
-        <span th:case="'MATERIAL'">Materiał</span>
-        <span th:case="'LABOR'">Robocizna</span>
-        <span th:case="*" th:text="${item.itemType}"></span>
-    </span>
+        <td data-label="Nazwa" th:text="${item.name}"></td>
+        <td data-label="Typ">
+            <span th:switch="${item.itemType}">
+                <span th:case="'MATERIAL'">Materiał</span>
+                <span th:case="'LABOR'">Robocizna</span>
+                <span th:case="*" th:text="${item.itemType}"></span>
+            </span>
         </td>
-        <td>
-    <span th:switch="${item.unit}">
-        <span th:case="'METER'">metr</span>
-        <span th:case="'SQUARE_METER'">m²</span>
-        <span th:case="'CUBIC_METER'">m³</span>
-        <span th:case="'SACK'">worek/wiadro</span>
-        <span th:case="'HOUR'">godz.</span>
-        <span th:case="*" th:text="${item.unit}"></span>
-    </span>
+        <td data-label="Cena/jedn." th:text="${#numbers.formatDecimal(item.pricePerUnit, 1, 2)}"></td>
+        <td data-label="Jednostka">
+            <span th:switch="${item.unit}">
+                <span th:case="'METER'">metr</span>
+                <span th:case="'SQUARE_METER'">m²</span>
+                <span th:case="'CUBIC_METER'">m³</span>
+                <span th:case="'SACK'">worek/wiadro</span>
+                <span th:case="'HOUR'">godz.</span>
+                <span th:case="*" th:text="${item.unit}"></span>
+            </span>
         </td>
-        <td th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}"></td>
-        <td th:text="${#numbers.formatDecimal(item.pricePerUnit, 1, 2)}"></td>
-        <td th:text="${#numbers.formatDecimal(item.lineTotal, 1, 2)}"></td>
-        <td>
+        <td data-label="Ilość" th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}"></td>
+        <td data-label="Wartość" th:text="${#numbers.formatDecimal(item.lineTotal, 1, 2)}"></td>
+        <td data-label="Akcje">
             <a th:href="@{/estimates/{estimateId}/items/{itemId}/edit(estimateId=${estimate.id}, itemId=${item.id})}">Edytuj</a>
         </td>
-        <td>
-            <form th:action="@{/estimates/{estimateId}/items/{itemId}/delete(estimateId=${estimate.id}, itemId=${item.id})}"
-                  method="post" style="display:inline">
-                <button type="submit" onlick="return confirm('Na pewno usunąć')">Usuń</button>
+        <td data-label="Akcje">
+            <form th:action="@{/estimates/{estimateId}/items/{itemId}/delete(estimateId=${estimate.id}, itemId=${item.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Na pewno usunąć?')">Usuń</button>
             </form>
         </td>
     </tr>
