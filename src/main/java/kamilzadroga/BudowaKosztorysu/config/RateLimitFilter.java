@@ -21,6 +21,13 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String contentType = request.getContentType();
+        if(contentType != null && contentType.startsWith("multipart/")) {
+            response.setStatus(415);
+            return;
+        }
+
         String ip = request.getRemoteAddr();
         Bucket bucket = buckets.computeIfAbsent(ip, k -> createNewBucket());
 
